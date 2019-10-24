@@ -7,17 +7,18 @@
  * Mod:
 */
 #include <Arduino.h>
-#include <math.h>
+#include <cmath>
+#include <algorithm>
 #include "Motor.h"
 
 //pins for teensy 3.2
-#define _DAC_PIN A14
-#define _DIRECTION_PIN 2
+#define _DAC_PIN A14 //built in DAC pin A14
+#define _DIRECTION_PIN 3 // digital open-drain (TX)
 #define _ENABLE_PIN 14 //A0
-#define _DAC_RESOLUTION 1024 //12 bit
+#define _DAC_RESOLUTION 4096 //12 bit
 #define _ALLOWED_VOLTAGE_MAX 2.5 //V
 #define _TEENSY_VOLTAGE_MAX 3.3 //V
-#define _REVERSE INPUT
+#define _REVERSE INPUT //TODO: determine which directions these truly are
 #define _FORWARD OUTPUT
 
 /*
@@ -42,19 +43,24 @@ motor effort output
 */
 void Motor::Drive(float effort)
 {
-  if(effort == 0 || effort > 1.0 || effort < -1.0)
+
+  //NOTE: constrain() exists only in the arduino compiler
+  //if using c++17, use std::clamp()
+  effort = constrain(effort, -1.0, 1.0); 
+
+  if(effort == 0)
   {
     return;
   }
   else if(effort < 0)
   {
     pinMode(directionPin, _REVERSE);
-    analogWrite(DAC_Pin, (effort*_DAC_RESOLUTION)*(_ALLOWED_VOLTAGE_MAX/_TEENSY_VOLTAGE_MAX));
+    analogWrite(DAC_Pin, ((1 - std::abs(effort)) * _DAC_RESOLUTION) * (_ALLOWED_VOLTAGE_MAX / _TEENSY_VOLTAGE_MAX));
   }
   else
   {
     pinMode(directionPin, _FORWARD);
-    analogWrite(DAC_Pin, (effort*_DAC_RESOLUTION)*(_ALLOWED_VOLTAGE_MAX/_TEENSY_VOLTAGE_MAX));
+    analogWrite(DAC_Pin, ((1 - std::abs(effort)) * _DAC_RESOLUTION) * (_ALLOWED_VOLTAGE_MAX / _TEENSY_VOLTAGE_MAX));
   }
 }
 
