@@ -42,7 +42,7 @@ motor effort output
 */
 void Motor::Drive(float effort)
 {
-  if(round(effort) == 0 || effort > 1.0 || effort < -1.0)
+  if(effort == 0 || effort > 1.0 || effort < -1.0)
   {
     return;
   }

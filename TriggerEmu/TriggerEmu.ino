@@ -7,25 +7,42 @@
 */
 
 //*************************PREPROCESSOR***********************
-#include <Motor.h>
+// #include <Motor.h>
 
 
 //*************************GLOBALS***********************
-Motor motor;
+// Motor motor;
 
 //*************************SETUP***********************
+// void setup()
+// {
+//     //empty
+// }
+
+const int DIR_PIN = 2;
+
 void setup()
-{
-    //empty
+{   
+    Serial.begin(115200);
+    pinMode(A14, OUTPUT);
 }
 
 //*************************LOOP***********************
+// void loop()
+// {
+//     motor.Drive(.1);
+//     delay(500);
+//     motor.Drive(0);
+//     delay(500);
+//     motor.Drive(-.1);
+//     delay(500);
+// }
+
+int i = 0;
 void loop()
 {
-    motor.Drive(.1);
-    delay(500);
-    motor.Drive(0);
-    delay(500);
-    motor.Drive(-.1);
-    delay(500);
+    pinMode(2, OUTPUT);
+    analogWrite(A14, 4096*(2.5/3.3)*sin(i));
+    delay(1);
+    Serial.println(4096*(2.5/3.3)*sin(i));
 }
