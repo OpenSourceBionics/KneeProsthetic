@@ -7,22 +7,31 @@
  *    
 */
 
-#define ANALOG_READ_RES 1024 //10 bit
+#define ANALOG_READ_RES 8192 //13 bit
+#define ANALOG_READ_BIT 13 //13 bit
 #define ANALOG_MAX_V 3.3 // max voltage readable by pin [V]
-const int hallPin = 15; //analog pin
+const int hallPinF = 15; //analog pin
+const int hallPinM = 16; //analog pin
+const int hallPinB = 17; //analog pin
 
 void setup()
 {
     Serial.begin(115200);
-    pinMode(hallPin, INPUT);
+    pinMode(hallPinF, INPUT);
+    pinMode(hallPinM, INPUT);
+    pinMode(hallPinB, INPUT);
 
+    analogReadResolution(ANALOG_READ_BIT);
+    
     delay(50);
-    Serial.println("Begin Read Hall...");
+    Serial.println("Front Middle Back");
 }
 
 void loop()
 {
     delay(100);
-    Serial.print("Hall V: ");Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPin));Serial.println();
+    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinF));Serial.println();
+    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinB));Serial.println();
+    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinM));Serial.println();
     
 }
