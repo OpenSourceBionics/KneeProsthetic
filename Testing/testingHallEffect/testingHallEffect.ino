@@ -11,6 +11,7 @@
 #define ANALOG_READ_BIT 13 //13 bit
 #define ANALOG_MAX_V 3.3 // max voltage readable by pin [V]
 #define MULTIPLIER 100 //increase signal for plot
+#define OFFSET 50 //plot signals in same region
 
 const int hallPinF = 15; //analog pin
 const int hallPinM = 16; //analog pin
@@ -32,8 +33,8 @@ void setup()
 void loop()
 {
     delay(100);
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinF)*MULTIPLIER, 6);Serial.println();
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinB)*MULTIPLIER, 6);Serial.println();
+    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinF)*MULTIPLIER - OFFSET, 6);Serial.print("\t");
+    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinB)*MULTIPLIER - OFFSET, 6);Serial.print("\t");
     Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinM)*MULTIPLIER, 6);Serial.println();
     
 }
