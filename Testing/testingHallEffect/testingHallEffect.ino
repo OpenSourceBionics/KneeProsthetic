@@ -13,9 +13,9 @@
 #define MULTIPLIER 100 //increase signal for plot
 #define OFFSET 50 //plot signals in same region
 
-const int hallPinF = 15; //analog pin
-const int hallPinM = 16; //analog pin
-const int hallPinB = 17; //analog pin
+const int hallPinF = A1; //analog pin
+const int hallPinM = A2; //analog pin
+const int hallPinB = A3; //analog pin
 
 void setup()
 {
@@ -33,8 +33,8 @@ void setup()
 void loop()
 {
     delay(100);
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinF)*MULTIPLIER - OFFSET, 6);Serial.print("\t");
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinB)*MULTIPLIER - OFFSET, 6);Serial.print("\t");
+    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinF)*MULTIPLIER, 6);Serial.print("\t");
+    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinB)*MULTIPLIER, 6);Serial.print("\t");
     Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinM)*MULTIPLIER, 6);Serial.println();
     
 }
