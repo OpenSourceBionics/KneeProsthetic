@@ -8,27 +8,22 @@
  *    
 */
 
-#include "GRF.h"
-
-// #include <Arduino.h>
+#include <Arduino.h>
 #include "GRF.h"
 
 GRF::GRF()
 {
     //setup aRead
-    anteriorHall = A1; //analog pin
-    deadCenterHall = A2; //analog pin
-    posteriorHall = A3; //analog pin
     pinMode(anteriorHall, INPUT);
     pinMode(deadCenterHall, INPUT);
     pinMode(posteriorHall, INPUT);
     analogReadResolution(ANALOG_READ_BIT);
 
     //setup members
-    hallReadings = new float[]{0.0,0.0,0.0};
+    hallReadings = new float[3];
 }
 
-void GRF::~GRF()
+GRF::~GRF()
 {
     delete hallReadings;
 }
@@ -37,7 +32,7 @@ void GRF::~GRF()
 returns voltage of anterior, dead center, and posterior hall sensor
 respectively in a float arrry
 */
-float* GRF::read()
+float* GRF::getVoltages()
 {
 
     hallReadings[0] = (ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(anteriorHall);

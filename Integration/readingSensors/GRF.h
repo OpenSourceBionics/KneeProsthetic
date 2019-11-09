@@ -24,15 +24,15 @@
 class GRF
 {
 private: 
-    const int anteriorHall; //anterior hall analog pin
-    const int deadCenterHall; //dead center hall analog pin
-    const int posteriorHall; //posterior analog pin
+    const int anteriorHall = A1; //anterior hall analog pin
+    const int deadCenterHall = A2; //dead center hall analog pin
+    const int posteriorHall = A3; //posterior analog pin
     float* hallReadings; // array to return
 
 public:
     GRF(); //constructor
-~GRF(); //destructor
-    float* read(); //reads all pins, returns vals
+    ~GRF(); //destructor
+    float* getVoltages(); //reads all pins, returns vals
 };
 
 #endif

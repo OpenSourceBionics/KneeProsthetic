@@ -9,26 +9,28 @@
    
 #include "AbsEncoder.h"
 
-void AbsEncoder::AbsEncoder()
+AbsEncoder::AbsEncoder()
 {
     SPI.begin(); //this inits all spi pins on teensy and pulls sck/mosi low and ss HIGH
     pinMode(ABSPIN, OUTPUT); //set CS pin
     digitalWrite(ABSPIN, HIGH); //deselect chip //does not seem to pull with SPI.begin()
 }
 
-void AbsEncoder::~AbsEncoder()
+AbsEncoder::~AbsEncoder()
 {
-    //Unecessary
+    //TODO: remove. Unecessary
 }
 
-void AbsEncoder::getAngleDeg()
+float AbsEncoder::getAngleDeg()
 {
-    SPI.beginTransaction(kneeSettings);
+    SPI.beginTransaction(SPISettings(10e6, MSBFIRST, SPI_MODE1));
   
     digitalWrite(ABSPIN, LOW);
     rawData = SPI.transfer16(ANGLECOM);
     digitalWrite(ABSPIN,HIGH);
 
     rawData = (rawData & (0x3FFF)); //offset data to 14 bit
-    angleDeg = ( (float) rawData)) * 360.0 / 16384.0; //convert to degrees
+    angleDeg = ( (float) rawData) * 360.0 / 16384.0; //convert to degrees
+    
+    return angleDeg;
 }

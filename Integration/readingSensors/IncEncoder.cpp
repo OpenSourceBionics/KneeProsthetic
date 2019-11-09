@@ -9,9 +9,11 @@
 */
 
 #include "IncEncoder.h"
+#include <Encoder.h>
 
-void IncEncoder::IncEncoder()
+IncEncoder::IncEncoder()
 {
+    incEnc = Encoder(encoderPinA, encoderPinB)
     encReadingOld = 0;
 }
 

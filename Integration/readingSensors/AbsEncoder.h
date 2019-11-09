@@ -7,7 +7,7 @@
  *    
 */
 
-#ifdef ABSENCODER_H
+#ifndef ABSENCODER_H
 #define ABSENCODER_H
 
 #include <Arduino.h>
@@ -17,10 +17,9 @@
 #define ABSPIN 10 //abs enc cs pin
 #define ANGLECOM 0x3FFF //abs enc register that returns measured angle with dynmic angle err compensation
 
-class AbsEncoder()
+class AbsEncoder
 {
     private:
-        SPISettings kneeSettings(10e6, MSBFIRST, SPI_MODE1);
         unsigned int rawData;
         float angleDeg;
 

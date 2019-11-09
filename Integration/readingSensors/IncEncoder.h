@@ -7,7 +7,7 @@
  *    
 */
 
-#ifdef INCENCODER_H
+#ifndef INCENCODER_H
 #define INCENCODER_H
 
 #include <Arduino.h>
@@ -18,7 +18,7 @@
 #define encoderPinZ //TODO:
 
 
-class IncEncoder()
+class IncEncoder
 {
     private:
         //not needed this time around
@@ -27,7 +27,7 @@ class IncEncoder()
         // const int encoderPinZ;
         int encReadingNew;
         int encReadingOld;
-        Encoder incEnc(encoderPinA, encoderPinB);
+        Encoder incEnc;
 
     public:
         IncEncoder();

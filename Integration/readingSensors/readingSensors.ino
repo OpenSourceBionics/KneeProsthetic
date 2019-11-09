@@ -17,8 +17,8 @@
 
 //sensor objects
 GRF grf;
-IncEnc incEnc;
-AbsEnc absEnc;
+IncEncoder incEnc;
+AbsEncoder absEnc;
 
 //control objects
 elapsedMicros elapsedTime; 
@@ -53,9 +53,9 @@ void loop()
 
 void readSensors()
 {
-    hallVoltages = grf.read();
+    hallVoltages = grf.getVoltages();
     incCount = incEnc.getCount();
     // incJointVel = incEnc.vel();
-    absJointPos = absEnc.getAngleDeg();
+    absJointPosDeg = absEnc.getAngleDeg();
     // absJointVel = absEnc.vel();
 }
