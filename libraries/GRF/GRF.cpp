@@ -10,27 +10,40 @@
 
 #include "GRF.h"
 
+// #include <Arduino.h>
+#include "GRF.h"
+
 GRF::GRF()
 {
-    hallPinF = A1; //analog pin
-    const int hallPinM = A2; //analog pin
-    const int hallPinB = A3; //analog pin
-    Serial.begin(115200);
-    pinMode(hallPinF, INPUT);
-    pinMode(hallPinM, INPUT);
-    pinMode(hallPinB, INPUT);
-
+    //setup aRead
+    anteriorHall = A1; //analog pin
+    deadCenterHall = A2; //analog pin
+    posteriorHall = A3; //analog pin
+    pinMode(anteriorHall, INPUT);
+    pinMode(deadCenterHall, INPUT);
+    pinMode(posteriorHall, INPUT);
     analogReadResolution(ANALOG_READ_BIT);
-    
-    delay(50);
-    Serial.println("Front Middle Back");
+
+    //setup members
+    hallReadings = new float[]{0.0,0.0,0.0};
 }
 
-void loop()
+void GRF::~GRF()
 {
-    delay(100);
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinF)*MULTIPLIER, 6);Serial.print("\t");
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinB)*MULTIPLIER, 6);Serial.print("\t");
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinM)*MULTIPLIER, 6);Serial.println();
-    
+    delete hallReadings;
 }
+
+/*
+returns voltage of anterior, dead center, and posterior hall sensor
+respectively in a float arrry
+*/
+float* GRF::read()
+{
+
+    hallReadings[0] = (ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(anteriorHall);
+    hallReadings[1] = (ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(deadCenterHall);
+    hallReadings[2] = (ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(posteriorHall);
+    
+    return hallReadings;
+}
+
