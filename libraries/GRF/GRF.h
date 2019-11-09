@@ -24,9 +24,10 @@
 class GRF()
 {
 private: 
-    const int hallPinA; //anterior hall analog pin
-    const int hallPinD; //dead center hall analog pin
-    const int hallPinP; //posterior analog pin
+    const int anteriorHall; //anterior hall analog pin
+    const int deadCenterHall; //dead center hall analog pin
+    const int posteriorHall; //posterior analog pin
+    float* hallReadings; // array to return
 
 public:
     GRF(); //constructor
