@@ -8,10 +8,9 @@
  *    
 */
 
+#include "GRF.h"
 
-
-
-void GRF::GRF()
+GRF::GRF()
 {
     hallPinF = A1; //analog pin
     const int hallPinM = A2; //analog pin

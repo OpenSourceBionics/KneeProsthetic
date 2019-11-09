@@ -8,7 +8,7 @@
  *    
 */
 
-#ifdef GRF_H
+#ifndef GRF_H
 #define GRF_H
 
 #define DEBUG //statement
@@ -21,7 +21,7 @@
 #endif
 
 
-class GRF()
+class GRF
 {
 private: 
     const int hallPinA; //anterior hall analog pin
@@ -30,7 +30,7 @@ private:
 
 public:
     GRF(); //constructor
-    ~GRF(); //destructor
+~GRF(); //destructor
     float* read(); //reads all pins, returns vals
 };
 

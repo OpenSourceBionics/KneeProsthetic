@@ -8,37 +8,53 @@
  *    
 */
 
-#define DEBUG //statement
-#define ANALOG_READ_RES 8192 //13 bit
-#define ANALOG_READ_BIT 13 //13 bit
-#define ANALOG_MAX_V 3.3 // max voltage readable by pin [V]
-#ifdef DEBUG
-#define MULTIPLIER 100 //increase signal for plot
-#define OFFSET 50 //plot signals in same region
-#endif
+//TODO: figure out why arduino can't see our custom libs in the libraries folder
+#include "GRF.h"
+#include "AbsEncoder.h"
+#include "IncEncoder.h"
 
-const int hallPinF = A1; //analog pin
-const int hallPinM = A2; //analog pin
-const int hallPinB = A3; //analog pin
+#define CONTROL_FREQ 2000 //Hz
+
+//sensor objects
+GRF grf;
+IncEnc incEnc;
+AbsEnc absEnc;
+
+//control objects
+elapsedMicros elapsedTime; 
+
+//control vars
+float* hallVoltages;
+int incCounts;
+float incJointVel;
+float absJointPosDeg;
+// float absJointVel;
+float loopTime; 
 
 void setup()
 {
     Serial.begin(115200);
-    pinMode(hallPinF, INPUT);
-    pinMode(hallPinM, INPUT);
-    pinMode(hallPinB, INPUT);
 
-    analogReadResolution(ANALOG_READ_BIT);
-    
+    loopTime = 1e6/CONTROL_FREQ; //uSec
+
     delay(50);
-    Serial.println("Front Middle Back");
+    Serial.println("begin integration");
 }
 
 void loop()
 {
-    delay(100);
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinF)*MULTIPLIER, 6);Serial.print("\t");
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinB)*MULTIPLIER, 6);Serial.print("\t");
-    Serial.print((ANALOG_MAX_V/ANALOG_READ_RES)*analogRead(hallPinM)*MULTIPLIER, 6);Serial.println();
+    if(elapsedTime >= loopTime)
+    {
+        readSensors();
+    }
     
+}
+
+void readSensors()
+{
+    hallVoltages = grf.read();
+    incCount = incEnc.getCount();
+    // incJointVel = incEnc.vel();
+    absJointPos = absEnc.getAngleDeg();
+    // absJointVel = absEnc.vel();
 }
