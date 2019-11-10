@@ -12,18 +12,19 @@
 
 #include <Arduino.h>
 #include <Encoder.h>
+
 #define ENCODER_RES 4096 //cpr
-#define encoderPinA //TODO:
-#define encoderPinB //TODO:
-#define encoderPinZ //TODO:
+// #define encoderPinA //TODO:
+// #define encoderPinB //TODO:
+// #define encoderPinZ //TODO:
 
 
 class IncEncoder
 {
     private:
+        const int encoderPinA;
+        const int encoderPinB;
         //not needed this time around
-        // const int encoderPinA;
-        // const int encoderPinB;
         // const int encoderPinZ;
         int encReadingNew;
         int encReadingOld;
@@ -32,7 +33,7 @@ class IncEncoder
     public:
         IncEncoder();
         ~IncEncoder();
-        int* read();
+        int getCount();
 };
 
 #endif

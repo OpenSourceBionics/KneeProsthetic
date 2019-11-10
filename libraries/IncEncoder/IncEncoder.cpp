@@ -23,9 +23,11 @@ IncEncoder::IncEncoder()
 //     delete encReadings;
 // }
 
-int* IncEncoder::read()
+int IncEncoder::getCount()
 {
     encReadingNew = incEnc.read();
+
+    return encReadingNew
 
     //TODO: return velocity or position, or whatever we want really
 }
