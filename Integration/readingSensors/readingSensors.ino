@@ -8,16 +8,21 @@
  *    
 */
 
+#include <Encoder.h>
 //TODO: figure out why arduino can't see our custom libs in the libraries folder
 #include "GRF.h"
 #include "AbsEncoder.h"
-#include "IncEncoder.h"
+// not using IncEncoder.h for now bc seems rather uneccesary
+// #include "IncEncoder.h"
 
 #define CONTROL_FREQ 2000 //Hz
+const int ENC_PIN_A = 1; //TODO:
+const int ENC_PIN_B = 2; //TODO:
 
 //sensor objects
 GRF grf;
-IncEncoder incEnc;
+Encoder incEnc(ENC_PIN_A, ENC_PIN_B);
+// IncEncoder incEnc;
 AbsEncoder absEnc;
 
 //control objects
@@ -25,7 +30,7 @@ elapsedMicros elapsedTime;
 
 //control vars
 float* hallVoltages;
-int incCounts;
+int incCount;
 float incJointVel;
 float absJointPosDeg;
 // float absJointVel;
@@ -54,7 +59,7 @@ void loop()
 void readSensors()
 {
     hallVoltages = grf.getVoltages();
-    incCount = incEnc.getCount();
+    incCount = incEnc.read();
     // incJointVel = incEnc.vel();
     absJointPosDeg = absEnc.getAngleDeg();
     // absJointVel = absEnc.vel();
