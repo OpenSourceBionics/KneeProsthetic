@@ -11,7 +11,7 @@
 
 
 //IMU stuff
-const int IMU = 0x69; //i2c addy
+const int IMU = 0x68; //i2c addy
 const int ACCEL_XOUT_H = 0x3B; //x accelerometer addy
 const int ACCEL_RES = 16384.0; //14 bits
 
@@ -30,10 +30,10 @@ void setup()
     Serial.begin(115200);
   Wire.begin();   // Initialize comunication
   Wire.setClock(4e5); //fast mode                   
-//   Wire.beginTransmission(IMU);       // Start communication with IMU6050 // IMU=0x68
-//   Wire.write(0x6B);                  // Talk to the register 6B
-//   Wire.write(0x00);                  // Make reset - place a 0 into the 6B register
-//   Wire.endTransmission(true);        //end the transmission
+  Wire.beginTransmission(IMU);       // Start communication with IMU6050 // IMU=0x68
+  Wire.write(0x6B);                  // Talk to the register 6B
+  Wire.write(0x00);                  // Make reset - place a 0 into the 6B register
+  Wire.endTransmission(true);        //end the transmission
   /*
   // Configure Accelerometer Sensitivity - Full Scale Range (default +/- 2g)
   Wire.beginTransmission(IMU);
@@ -48,8 +48,9 @@ void setup()
   delay(20);
   */
   // Call this function if you need to get the IMU error values for your module
-//   calculate_IMU_error();
-//   delay(20);
+  delay(2000);
+  calculate_IMU_error();
+  delay(10000);
 }
 
 void loop()
@@ -100,10 +101,10 @@ void loop()
 //   Serial.print("/");
 //   Serial.println(yaw);
 
-Serial.println(AccX); 
-Serial.println(AccY);
-Serial.println(AccZ);
-Serial.println();
+// Serial.println(AccX); 
+// Serial.println(AccY);
+// Serial.println(AccZ);
+// Serial.println();
 
 
 

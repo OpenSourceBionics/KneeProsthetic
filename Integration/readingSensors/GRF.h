@@ -15,6 +15,7 @@
 #define ANALOG_READ_RES 8192 //13 bit
 #define ANALOG_READ_BIT 13 //13 bit
 #define ANALOG_MAX_V 3.3 // max voltage readable by pin [V]
+
 #ifdef DEBUG
 #define MULTIPLIER 100 //increase signal for plot
 #define OFFSET 50 //plot signals in same region
@@ -24,6 +25,7 @@
 class GRF
 {
 private: 
+    //all pins must be analog read capable
     const int anteriorHall = A1; //anterior hall analog pin
     const int deadCenterHall = A2; //dead center hall analog pin
     const int posteriorHall = A3; //posterior analog pin
@@ -32,6 +34,7 @@ private:
 public:
     GRF(); //constructor
     ~GRF(); //destructor
+    //No need for copy
     float* getVoltages(); //reads all pins, returns vals
 };
 

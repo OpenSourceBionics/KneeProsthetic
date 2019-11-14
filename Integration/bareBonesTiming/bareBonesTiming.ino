@@ -22,7 +22,7 @@ unsigned int loopTime = (int)5e5; //uSec
 const unsigned int loopFreq = 2; //Hz
 
 //IMU stuff
-const int IMU = 0x69; //i2c addy
+const int IMU = 0x68; //i2c addy
 const int ACCEL_XOUT_H = 0x3B; //x accelerometer addy
 const int ACCEL_RES = 16384.0; //14 bits
 float AccX, AccY, AccZ;
