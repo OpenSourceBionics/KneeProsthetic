@@ -18,8 +18,8 @@
 #define _DAC_RESOLUTION 4096 //12 bit
 #define _ALLOWED_VOLTAGE_MAX 2.5 //V
 #define _TEENSY_VOLTAGE_MAX 3.3 //V
-#define _REVERSE INPUT //TODO: determine which directions these truly are
-#define _FORWARD OUTPUT
+#define _REVERSE HIGH //TODO: determine which directions these truly are
+#define _FORWARD LOW
 
 /*
 Initializes motor control pins, defaults to teensy 3.2 setup
@@ -54,12 +54,12 @@ void Motor::Drive(float effort)
   }
   else if(effort < 0)
   {
-    pinMode(directionPin, _REVERSE);
+    digitalWrite(directionPin, _REVERSE);
     analogWrite(DAC_Pin, ((1 - std::abs(effort)) * _DAC_RESOLUTION) * (_ALLOWED_VOLTAGE_MAX / _TEENSY_VOLTAGE_MAX));
   }
   else
   {
-    pinMode(directionPin, _FORWARD);
+    digitalWrite(directionPin, _FORWARD);
     analogWrite(DAC_Pin, ((1 - std::abs(effort)) * _DAC_RESOLUTION) * (_ALLOWED_VOLTAGE_MAX / _TEENSY_VOLTAGE_MAX));
   }
 }
