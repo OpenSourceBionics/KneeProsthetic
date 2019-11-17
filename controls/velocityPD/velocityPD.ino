@@ -1,8 +1,8 @@
    /*
  * Auth: Justin Francis
  * Date: 11/12/19
- * Ver: 1.0
- * Sum: experimenting with a proportional velocity controller (tryna see what's inside the makita motor controller), 
+ * Ver: 0.1
+ * Sum: experimenting with a proportional-derivative velocity controller (tryna see what's inside the makita motor controller), 
  *      written for teensy 3.6
  * 
  * Mod:
@@ -17,13 +17,17 @@
 
 //control vars
 float P = 30; //proportional gain
+float D = 0.15; //derivative gain
 float k; //conversion factor for theta dot to voltage for the controller output
 float motCmd;
 float err;
 float errOld;
+float dErr;
 float thetaDes = 0;
 float theta, thetaDotDes, inputV;
 const int POT_PIN = 33; //A14 to get thetaDes
+int startTime = 0;
+elapsedMicros eTime;
 
 //motor vars
 int DAC_Pin = A22;
@@ -85,17 +89,22 @@ void loop()
     thetaDes = (PI*sin(i));
     i += 0.0001;
 
-    Serial.print(theta*.25);Serial.print("\t");Serial.println(thetaDes*.25);
+
     // Serial.print("theta: ");Serial.println(theta, 6);
     // Serial.print("thetaDes: ");Serial.println(thetaDes, 6);
 
     //find err
     err = thetaDes - theta; //rad
+    dErr = (err - errOld)/(eTime); //rad
+    eTime = 0;
 
     // Serial.print("err: ");Serial.println(err, 6);
 
     //calc correction
-    thetaDotDes = P * err; //[rad/s]
+    thetaDotDes = P * err + D * dErr; //[rad/s]
+
+    Serial.print(theta*.25);Serial.print("\t");Serial.print(thetaDes*.25);
+    Serial.print((P*err)*.1);Serial.print("\t");Serial.println(thetaDotDes*.1);
 
     // Serial.print("thetaDotDes: ");Serial.println(thetaDotDes, 6);
 
@@ -115,6 +124,7 @@ void loop()
     MotorDrive(thetaDotDes);
 
     //feedback (not needed for P controller)
+    errOld = err;
     Serial.println();
     // delay(1000);
 }
