@@ -20,7 +20,7 @@
 const int chipSelect = BUILTIN_SDCARD;
 
 //control vars
-float P = 10; //proportional gain
+float P = 5; //proportional gain
 float k; //conversion factor for theta dot to voltage for the controller output
 float motCmd;
 float err;
@@ -47,14 +47,14 @@ void setup()
     pinMode(directionPin, OUTPUT);
     pinMode(enablePin, OUTPUT);
 
-    // see if the card is present and can be initialized:
-  if (!SD.begin(chipSelect)) {
-    Serial.println("Card failed, or not present");
-    // don't do anything more:
-    return;
-  }
-  Serial.println("card initialized.");
-  delay(5000);
+  //   // see if the card is present and can be initialized:
+  // if (!SD.begin(chipSelect)) {
+  //   Serial.println("Card failed, or not present");
+  //   // don't do anything more:
+  //   return;
+  // }
+  // Serial.println("card initialized.");
+  delay(2000);
 }
 
 void MotorDrive(float thetaDotDes)
@@ -101,18 +101,18 @@ void loop()
 
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
-  File dataFile = SD.open("DATALOG.txt", FILE_WRITE);
+  // File dataFile = SD.open("DATALOG.txt", FILE_WRITE);
 
-  // if the file is available, write to it:
-  if (dataFile) {
-    dataFile.println(dataString);
-    dataFile.close();
-        // print to the serial port too:
-    Serial.println(dataString);
-  }  
-  else {
-    Serial.println("error opening datalog.txt");
-  } 
+  // // if the file is available, write to it:
+  // if (dataFile) {
+  //   dataFile.println(dataString);
+  //   dataFile.close();
+  //       // print to the serial port too:
+  //   Serial.println(dataString);
+  // }  
+  // else {
+  //   Serial.println("error opening datalog.txt");
+  // } 
 
     //feedback (not needed for P controller)
 }
