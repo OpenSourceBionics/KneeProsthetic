@@ -30,6 +30,6 @@ void loop()
     // i += .01;
     float effort = (.25*sin(i));
     i += 0.0001;
-    Serial.println(effort);
+    Serial.println(effort*5);
     // motor.Drive(effort);
 }
