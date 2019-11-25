@@ -24,12 +24,25 @@ void setup()
 {
     Serial.begin(115200);
     Wire.begin();   // Initialize comunication
-    Wire.setClock(4e5); //fast mode                   
-    delay(500);
+    Wire.setClock(4e5); //fast mode      
+
+    while(!Serial)
+    {
+      //wait
+    }
+    pinMode(13, OUTPUT);
+    digitalWrite(13, HIGH);
+
+    Serial.print("first byte: ");Serial.println(DAC_Write, BIN);
+    Serial.print("second: ");Serial.println(0x10, BIN);
+    Serial.print("third: ");Serial.println(0x40, BIN);
+    Serial.print("fourth: ");Serial.println(0x00, BIN);
 }
 
 void loop() 
 {
+    // digitalWrite(13, HIGH);
+
     DAC_Cmd.number = 32768;
 
     Wire.beginTransmission(DAC_Write);       // Start communication with DAC  
@@ -39,6 +52,13 @@ void loop()
     // Wire.write(DAC_Cmd.bytes[1]); //msb
     // Wire.write(DAC_Cmd.bytes[0]); //lsb
     Wire.endTransmission(true);  
+    delay(1);
+
+
+    // delay(10);
+    // digitalWrite(13, LOW);
+    // delay(10);
+
 
     // DAC_Cmd.number = 32768;
 

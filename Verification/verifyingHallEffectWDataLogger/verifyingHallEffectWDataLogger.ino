@@ -38,6 +38,9 @@
 // Teensy 2.0: pin 0
 // Teensy++ 2.0: pin 20
 const int chipSelect = BUILTIN_SDCARD;
+const int postHall = 21;
+const int deadHall = 22;
+const int anteHall = 23;
 
 void setup()
 {
@@ -52,48 +55,66 @@ void setup()
   // }
 
 
-  Serial.print("Initializing SD card...");
+  // Serial.print("Initializing SD card...");
   
-  // see if the card is present and can be initialized:
-  if (!SD.begin(chipSelect)) {
-    Serial.println("Card failed, or not present");
-    // don't do anything more:
-    return;
-  }
-  Serial.println("card initialized.");
+  // // see if the card is present and can be initialized:
+  // if (!SD.begin(chipSelect)) {
+  //   Serial.println("Card failed, or not present");
+  //   // don't do anything more:
+  //   return;
+  // }
+  // Serial.println("card initialized.");
+
+  pinMode(postHall, INPUT);
+  pinMode(deadHall, INPUT);
+  pinMode(anteHall, INPUT);
+
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
 }
+
+
+
 
 void loop()
 {
   // make a string for assembling the data to log:
   String dataString = "";
 
-  // read three sensors and append to the string:
-  for (int analogPin = 0; analogPin < 3; analogPin++) {
-    int sensor = analogRead(analogPin);
-    dataString += String(sensor);
-    if (analogPin < 2) {
-      dataString += ","; 
-    }
-  }
+  // // read three sensors and append to the string:
+  // for (int analogPin = 0; analogPin < 3; analogPin++) {
+  //   int sensor = analogRead(analogPin);
+  //   dataString += String(sensor);
+  //   if (analogPin < 2) {
+  //     dataString += ","; 
+  //   }
+  // }
 
-  // open the file. note that only one file can be open at a time,
-  // so you have to close this one before opening another.
-  File dataFile = SD.open("datalog.txt", FILE_WRITE);
+  dataString += String(analogRead(postHall));
+  dataString += ",";
+  dataString += String(analogRead(deadHall));
+  dataString += ",";
+  dataString += String(analogRead(anteHall));
 
-  // if the file is available, write to it:
-  if (dataFile) {
-    dataFile.println(dataString);
-    dataFile.close();
-    // print to the serial port too:
-    Serial.println(dataString);
-  }  
-  // if the file isn't open, pop up an error:
-  else {
-    Serial.println("error opening datalog.txt");
-  } 
+  Serial.println(dataString);
+
+
+
+  // // open the file. note that only one file can be open at a time,
+  // // so you have to close this one before opening another.
+  // File dataFile = SD.open("datalog.txt", FILE_WRITE);
+
+  // // if the file is available, write to it:
+  // if (dataFile) {
+  //   dataFile.println(dataString);
+  //   dataFile.close();
+  //   // print to the serial port too:
+  //   Serial.println(dataString);
+  // }  
+  // // if the file isn't open, pop up an error:
+  // else {
+  //   Serial.println("error opening datalog.txt");
+  // } 
 }
 
 
