@@ -52,7 +52,7 @@ void loop()
     // Wire.write(DAC_Cmd.bytes[1]); //msb
     // Wire.write(DAC_Cmd.bytes[0]); //lsb
     Wire.endTransmission(true);  
-    delay(1);
+    delay(10);
 
 
     // delay(10);
