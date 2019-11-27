@@ -47,8 +47,8 @@ void loop()
 
     Wire.beginTransmission(DAC_Write);       // Start communication with DAC  
     Wire.write(0x10); //ctrl byte that says store and output i2c data
-    Wire.write(0x40); //ctrl byte that says store and output i2c data
-    Wire.write(0x00); //ctrl byte that says store and output i2c data
+    Wire.write(0x40); //cmd msb 
+    Wire.write(0x00); //cmd lsb
     // Wire.write(DAC_Cmd.bytes[1]); //msb
     // Wire.write(DAC_Cmd.bytes[0]); //lsb
     Wire.endTransmission(true);  
