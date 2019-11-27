@@ -17,7 +17,7 @@
 #define TRIAL
 
 //control vars
-float P = 5; //proportional gain K_u ~= 35
+float P = 30; //proportional gain K_u ~= 35
 float k; //conversion factor for theta dot to voltage for the controller output
 float motCmd;
 float err;
@@ -39,9 +39,11 @@ const float INC_RES = 4096.0; //cpr
 void setup()
 {
     Serial.begin(115200);
-    // pinMode(DAC_Pin, OUTPUT);
-    // pinMode(directionPin, OUTPUT);
-    // pinMode(enablePin, OUTPUT);
+    pinMode(DAC_Pin, OUTPUT);
+    pinMode(directionPin, OUTPUT);
+    pinMode(enablePin, OUTPUT);
+    digitalWrite(enablePin, LOW);
+    delay(200);
     pinMode(POT_PIN, INPUT);
     Serial.println("theta thetaDes");
 
@@ -57,9 +59,11 @@ void MotorDrive(float thetaDotDes)
     {
         digitalWrite(directionPin, LOW);
     }
-
+    
+    digitalWrite(enablePin, HIGH);
     motCmd = MOT_CONTROL_CURVE; //[V]
     motCmd = constrain(motCmd, 0.0, .75);
+    // Serial.print("motcmd: "); Serial.println(motCmd);
 
     analogWrite(DAC_Pin, (int)(motCmd*1024/3.3));
 }
@@ -70,18 +74,20 @@ void loop()
     //read sensor
     counts = inc.read();
     inputV = analogRead(POT_PIN) * (3.3/1024); //V
+    // thetaDes = (PI/2.2*sin(i));
+    // i += 0.0001;
 
     //convert to theta
     theta = (((float)counts/INC_RES))*2*PI; //rad
-    thetaDes = inputV * (PI/(3.3*2)); //rad
+    thetaDes = inputV * (PI/(3.3*2)) - .5; //rad
 
     #ifdef TRIAL
-    thetaDes  = constrain(thetaDes, 0.0, 1);
+    thetaDes  = constrain(thetaDes, -.5, 1.5);
     #endif
 
     // Serial.print(theta*.25);Serial.print("\t");Serial.println(thetaDes*.25);
-    // Serial.print("theta: ");Serial.println(theta, 6);
-    // Serial.print("thetaDes: ");Serial.println(thetaDes, 6);
+    Serial.print("theta: ");Serial.println(theta, 6);
+    Serial.print("thetaDes: ");Serial.println(thetaDes, 6);
 
     //find err
     err = thetaDes - theta; //rad
@@ -93,6 +99,6 @@ void loop()
     MotorDrive(thetaDotDes);
 
     //feedback (not needed for P controller)
-    // Serial.println();
+    Serial.println();
     // delay(1000);
 }
