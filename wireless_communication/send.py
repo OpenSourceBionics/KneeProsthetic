@@ -4,7 +4,7 @@ import time
 
 
 # Configure wireless connection with server (board on leg)
-HOST = "155.98.5.226"
+HOST = "INSERT SERVER IP ADDRESS"
 PORT = 5005
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
@@ -28,7 +28,7 @@ while True:
         	# Each value will be a 12 or 16 bit signed integer value depending on the
         	# ADC (ADS1015 = 12-bit, ADS1115 = 16-bit).
    	# Print the ADC values.
-    	command = "Y : " + str(values[0]) + ", Button : " + str(values[1])
+    	command = str(values[0])
    	s.send(command)
    	# delay
     	time.sleep(0.5)
