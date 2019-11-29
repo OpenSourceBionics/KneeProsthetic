@@ -7,6 +7,10 @@ PORT = 5005
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print "socket created"
 
+# connect with teensy
+ser = serial.Serial('/dev/tty/ACM0', 9600)
+time.sleep(.5)
+
 # managing error exception
 try:
 	s.bind((HOST,PORT))
