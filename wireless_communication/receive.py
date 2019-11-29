@@ -1,4 +1,6 @@
 import socket
+import serial
+import time
 
 HOST = "INSERT SERVER IP ADDRESS"
 PORT = 5005
@@ -20,6 +22,11 @@ print "connected"
 while True:
 	data = conn.recv(1024)
 	print data
+	
+	# send data to teensy
+	ser.write(str(data))
+	time.sleep(.1)
+	
 	#print "I sent a message back in response to: " + data
 
 	# process message
