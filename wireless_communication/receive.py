@@ -1,6 +1,6 @@
 import socket
 
-HOST = "155.98.5.226"
+HOST = "INSERT SERVER IP ADDRESS"
 PORT = 5005
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print "socket created"
