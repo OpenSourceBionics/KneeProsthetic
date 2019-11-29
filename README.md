@@ -8,12 +8,12 @@ This repository contains the preliminary code to manually control your powered p
 
 ### Prerequisites
 
-Arduino - latest edition
-Teensyduino - latest edition
-Python 2.7
+* Arduino - latest edition
+* Teensyduino - latest edition
+* Python 2.7
 
-Raspberry Pi Zero W (x2 for wireless communication)
-Teensy 4.0
+* Raspberry Pi Zero W (x2 for wireless communication)
+* Teensy 4.0
 
 ### Installing
 
