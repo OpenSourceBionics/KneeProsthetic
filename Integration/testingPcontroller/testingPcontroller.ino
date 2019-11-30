@@ -55,13 +55,13 @@ const int directionPin = 5;
 const int enablePin = 4;
 
 //incremental Encoder
-Encoder inc(2,3); //interrupt attacht to digital pins 2 and 3
+Encoder inc(IncEncA,IncEncB); //interrupt attacht to digital pins 2 and 3
 int counts, countsOld = 0; 
 const float INC_RES = 4096.0; //resolution of encoder [cpr]
 
 void setup()
 {
-    Serial.begin(115200); //turn on serial port (display)
+    Serial.begin(115200); //turn on serial port (display) at 115200 baud
     //set ports
     pinMode(DAC_Pin, OUTPUT);
     pinMode(directionPin, OUTPUT);
@@ -119,7 +119,7 @@ void loop()
     i += 0.0001; //this needs to decrease if the teensy 4.0 is used because of faster clock
     #endif
 
-    //convert to theta
+    //convert to radians
     theta = (((float)counts/INC_RES))*2*PI; //[rad]
 
     #ifdef POT_CTRL
