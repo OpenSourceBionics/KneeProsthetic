@@ -45,8 +45,8 @@ float thetaDes = 0; //desire joint position [rad]
 float theta, thetaDotDes; //joint position [rad], desire joint velocity [rad/s]
 
 #ifdef POT_CTRL
-float inputV; //potentionmeter voltage [V]
-const int POT_PIN = 14; //potentionmeter pin
+float inputV; //potentiometer voltage [V]
+const int POT_PIN = 14; //potentiometer pin
 #endif
 
 //motor vars
@@ -55,7 +55,7 @@ const int directionPin = 5;
 const int enablePin = 4;
 
 //incremental Encoder
-Encoder inc(IncEncA,IncEncB); //interrupt attacht to digital pins 2 and 3
+Encoder inc(IncEncA,IncEncB); //interrupt attach to digital pins 2 and 3
 int counts, countsOld = 0; 
 const float INC_RES = 4096.0; //resolution of encoder [cpr]
 
@@ -97,7 +97,7 @@ void MotorDrive(float thetaDotDes)
     
     digitalWrite(enablePin, HIGH);
     motCmd = MOT_CONTROL_CURVE; //[V]
-    motCmd = constrain(motCmd, 0.0, .75); //anything outside of this voltage range causese the controller to pause
+    motCmd = constrain(motCmd, 0.0, .75); //anything outside of this voltage range cause the controller to pause
 
     analogWrite(DAC_Pin, (int)(motCmd*DAC_RES/DAC_MAX)); //convert command into voltage
 }
