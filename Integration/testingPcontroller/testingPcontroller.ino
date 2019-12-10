@@ -16,6 +16,7 @@
 
 //empirically determined speed curve (x = thetaDotDes [rad/s], y = command voltage[rad/s])
 #define MOT_CONTROL_CURVE (0.67 - 0.148*log(abs(thetaDotDes))) 
+#define MOT_MIN_CMD 2.5
 
 //teensy 3.2 limits
 #define DAC_RES 1023 //10 bit
@@ -97,7 +98,7 @@ void MotorDrive(float thetaDotDes)
     
     digitalWrite(enablePin, HIGH);
     motCmd = MOT_CONTROL_CURVE; //[V]
-    motCmd = constrain(motCmd, 0.0, .75); //anything outside of this voltage range cause the controller to pause
+    motCmd = constrain(motCmd, 0.0, MOT_MIN_CMD); //anything outside of this voltage range cause the controller to pause
 
     analogWrite(DAC_Pin, (int)(motCmd*DAC_RES/DAC_MAX)); //convert command into voltage
 }
