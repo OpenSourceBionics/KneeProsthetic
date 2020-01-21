@@ -9,7 +9,7 @@ PORT = 5005
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
-# Create an ADS1115 ADC (16-bit) instance.
+# Create an ADS1115 ADC (16-bit) instance
 adc = Adafruit_ADS1x15.ADS1115()
 
 GAIN = 1
@@ -33,6 +33,7 @@ while True:
    	# delay
     	time.sleep(0.5)
 
+	# no longer needed, one way comm
 	# reply from server
 	#reply = s.recv(1024)
 	#if reply == "Terminating":
