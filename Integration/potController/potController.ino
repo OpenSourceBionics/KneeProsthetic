@@ -97,12 +97,15 @@ void loop()
     //convert data to angle 
     absData = (absData & (0x3FFF)); 
     angle = ( (float) absData * 360.0 / 16384.0) - EXTENSION_MAX; //[deg]
+    if(angle <= (EXTENSION_MAX - 10) || angle >= 0){
+        angle = 360;
+    }
     theta = angle * PI/180; //[rad]
     Serial.print("angle: ");Serial.println(theta);
 
     //set desired pos
     inputV = analogRead(POT_PIN) * (3.3/1024); //[V]
-    thetaDes = constrain(inputV * (PI/(3.3*2)), EXTENSION_MAX, 360); //[rad]
+    thetaDes = inputV * (PI/(3.3*2)); //[rad]
     Serial.print("thetaDes: ");Serial.println(thetaDes);
 
     //find err
