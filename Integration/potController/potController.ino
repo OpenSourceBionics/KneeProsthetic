@@ -97,8 +97,8 @@ void loop()
     //convert data to angle 
     absData = (absData & (0x3FFF)); 
     angle = ( (float) absData * 360.0 / 16384.0) - EXTENSION_MAX; //[deg]
-    if(angle <= (EXTENSION_MAX - 10) || angle >= 0){
-        angle = 360;
+    if(angle <= (EXTENSION_MAX - 50)){
+        angle += 360;
     }
     theta = angle * PI/180; //[rad]
     Serial.print("angle: ");Serial.println(theta);
