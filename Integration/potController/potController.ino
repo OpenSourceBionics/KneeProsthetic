@@ -102,7 +102,7 @@ void loop()
 
     //set desired pos
     inputV = analogRead(POT_PIN) * (3.3/1024); //[V]
-    thetaDes = inputV * (PI/(3.3*2)); //[rad]
+    thetaDes = constrain(inputV * (PI/(3.3*2)), EXTENSION_MAX, 360); //[rad]
     Serial.print("thetaDes: ");Serial.println(thetaDes);
 
     //find err
