@@ -15,11 +15,12 @@ private:
   int DAC_Pin;
   int directionPin;
   int enablePin;
+  float motCmd;
 
 public:
-  Motor();
+  //defaults to teensy 3.2 pins
   Motor(int dacPin, int dirPin, int enPin);
-  void Drive(float effort);
+  void MotorDrive(float effort = 0.0);
   void Stop(void);
   void FreeSpin(void);
 

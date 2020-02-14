@@ -1,8 +1,8 @@
 /*
  * Auth: Justin Francis
  * Date: 2/5/20
- * Ver: 0.1
- * Sum: Using a potentiometer to control knee, written for teensy 3.2
+ * Ver: 1.0
+ * Sum: Using a potentiometer to control knee, written for teensy 3.2. Works beautifully
  * Mod:
  *    
 */
@@ -14,13 +14,14 @@
 #define ANGLECOM 0x3FFF //abs enc register that returns measured angle with dynmic angle err compensation
 //empirically determined speed curve (x = thetaDotDes [rad/s], y = command voltage[rad/s])
 #define MOT_CONTROL_CURVE (0.67 - 0.148*log(abs(thetaDotDes))) 
-#define MOT_MIN_CMD 2.5
+
 //teensy 3.2 limits
 #define DAC_RES 1023 //10 bit
 #define DAC_MAX 3.3 //[V]
 //as read from abs enc
 #define EXTENSION_MAX 298.2 //[deg]
-#define FLEXION_MAX 18 //[deg]
+#define FLEXION_MAX 10 //[deg]
+#define INPUT_MAX 1.20 //[rad]
 
 SPISettings kneeSettings(10e6, MSBFIRST, SPI_MODE1);
 
@@ -96,16 +97,28 @@ void loop()
     
     //convert data to angle 
     absData = (absData & (0x3FFF)); 
-    angle = ( (float) absData * 360.0 / 16384.0) - EXTENSION_MAX; //[deg]
-    if(angle <= (EXTENSION_MAX - 50)){
-        angle += 360;
+    angle = ( (float) absData * 360.0 / 16384.0); //[deg]
+    //angle conditioning
+    if(angle >= EXTENSION_MAX){
+        angle -= EXTENSION_MAX;
     }
+    else if(angle <= FLEXION_MAX){
+        angle += (360.0 - EXTENSION_MAX);
+    }
+    else{
+        while(1){
+            //TODO: need to program some sort of reset or get the other encoder working
+            //stop motor
+            MotorDrive(0.0);
+        }
+    }
+    //convert to rad
     theta = angle * PI/180; //[rad]
     Serial.print("angle: ");Serial.println(theta);
 
     //set desired pos
     inputV = analogRead(POT_PIN) * (3.3/1024); //[V]
-    thetaDes = inputV * (PI/(3.3*2)); //[rad]
+    thetaDes = inputV * (INPUT_MAX/(3.3)); //[rad]
     Serial.print("thetaDes: ");Serial.println(thetaDes);
 
     //find err
