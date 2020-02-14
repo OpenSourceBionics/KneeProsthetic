@@ -18,6 +18,7 @@
 //teensy 3.2 limits
 #define DAC_RES 1023 //10 bit
 #define DAC_MAX 3.3 //[V]
+#define MOT_MIN_CMD 3.3 //[V]
 //as read from abs enc
 #define EXTENSION_MAX 298.2 //[deg]
 #define FLEXION_MAX 10 //[deg]
