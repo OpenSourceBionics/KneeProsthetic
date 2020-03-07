@@ -9,6 +9,10 @@
 
 #include <Arduino.h>
 #include <SPI.h>
+#include <Wire.h>
+#include <math.h>
+
+
 
 #define ABSPIN 10 //abs enc cs pin
 #define ANGLECOM 0x3FFF //abs enc register that returns measured angle with dynmic angle err compensation
@@ -26,6 +30,19 @@
 
 SPISettings kneeSettings(10e6, MSBFIRST, SPI_MODE1);
 
+//IMU stuff
+const int IMU = 0x68; //i2c addy
+const int ACCEL_XOUT_H = 0x3B; //x accelerometer addy
+const int ACCEL_RES = 16384.0; //14 bits
+
+float AccX, AccY, AccZ;
+float GyroX, GyroY, GyroZ;
+float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
+float roll, pitch, yaw;
+float AccErrorX, AccErrorY, GyroErrorX, GyroErrorY, GyroErrorZ;
+float elapsedTime, currentTime, previousTime;
+int c = 0;
+
 //control vars
 float P = 30; //proportional gain K_u ~= 35
 float k; //conversion factor for theta dot to voltage for the controller output
@@ -41,13 +58,14 @@ const int enablePin = 4;
 
 //fn prototypes
 void MotorDrive(float thetaDotDes);
-uint8_t finiteStateMachine(float *GRF, float *accel, float *gyro);
+int8_t finiteStateMachine(float *GRF, float *IMU, uint32_t incEnc);
 void stanceController(void);
 
 
 void setup()
 {
     Serial.begin(115200);
+    //enable motor
     pinMode(DAC_Pin, OUTPUT);
     pinMode(directionPin, OUTPUT);
     pinMode(enablePin, OUTPUT);
@@ -57,10 +75,18 @@ void setup()
     digitalWrite(enablePin, LOW);
     delay(2);
 
+    //enable spi
     SPI.begin(); //this inits all spi pins on teensy and pulls sck/mosi low and ss HIGH
     pinMode(ABSPIN, OUTPUT);
     digitalWrite(ABSPIN, HIGH);
 
+    //enable IMU
+    Wire.begin();   // Initialize comunication
+    Wire.setClock(4e5); //fast mode                   
+    Wire.beginTransmission(IMU);       // Start communication with IMU6050 // IMU=0x68
+    Wire.write(0x6B);                  // Talk to the register 6B
+    Wire.write(0x00);                  // Make reset - place a 0 into the 6B register
+    Wire.endTransmission(true);        //end the transmission
 
 }
 
@@ -98,6 +124,21 @@ void loop()
     Serial.print("angle: ");Serial.println(theta);
 
 
+    // === Read acceleromter data === //
+    Wire.beginTransmission(IMU);
+    Wire.write(ACCEL_XOUT_H); // Start with register 0x3B (ACCEL_XOUT_H)
+    Wire.endTransmission();
+    Wire.requestFrom(IMU, 6, true); // Read 6 registers total, each axis value is stored in 2 registers
+    //For a range of +-2g, we need to divide the raw values by 16384, according to the datasheet
+    AccX = (Wire.read() << 8 | Wire.read()) / 16384.0; // X-axis value
+    AccY = (Wire.read() << 8 | Wire.read()) / 16384.0; // Y-axis value
+    AccZ = (Wire.read() << 8 | Wire.read()) / 16384.0; // Z-axis value
+
+    float IMUdata[] = {AccX, AccY, AccZ};
+    float GRF[3];
+    uint16_t incEnd = 0;
+    Serial.print("state: ");Serial.println(finiteStateMachine(IMUdata, GRF, incEnc));
+
 }
 
 /*
@@ -125,25 +166,39 @@ void MotorDrive(float thetaDotDes)
 
 /*
  * takes in GRF, IMU, and returns the state
+ * stance == 0
+ * swing == 1
+ * undef == -1
 */
-uint8_t finiteStateMachine(float *GRF, float *accel, float *gyro){
-    //values to trigger around
-    const float antGRF;
-    const float postGRF;
-    const float deadGRF;
+int8_t finiteStateMachine(float *GRF, float *IMU, uint16_t incEnc){
+    //indices to trigger around
+    const uint8_t antGRF = 0;
+    const uint8_t postGRF = 1;
+    const uint8_t deadGRF = 2;
     //will only need 1
-    const float xAcc;
-    const float yAcc;
-    const float zAcc;
+    const uint8_t sagAcc = 0;
+    const uint8_t transAcc = 1;
+    const uint8_t coronAcc = 2;
+    const float stanceThres = 0.174533; //[rad]
     //will only need 1
-    const float xGyro;
-    const float yGyro;
-    const float zGyro;
+    const uint8_t sagGyro = 0;
+    const uint8_t transGyro = 1;
+    const uint8_t coronGyro = 2;
+
+
+    //find thigh angle
+    float thighAngle = atan(IMU[coronAcc]/IMU[transAcc]); //[rad]
 
     // if thigh angle <= Stance, return stance 
+    if(thighAngle <=  standThres){
+        return 1;
+    }
+    else{return 0;}
     //else return swing
 
 }
+
+
 
 /*
  * tightens knee to full extension end stop 
