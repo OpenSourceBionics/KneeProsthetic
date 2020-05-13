@@ -2,7 +2,7 @@
 
 //empirically determined speed curve (x = thetaDotDes [rad/s], y = command voltage[rad/s])
 #define MOT_CONTROL_CURVE (0.67 - 0.148*log(abs(thetaDotDes))) 
-#define MOT_MIN_CMD 2.5
+#define MOT_MIN_CMD 3.3
 
 //teensy 3.2 limits
 #define DAC_RES 1023 //10 bit
